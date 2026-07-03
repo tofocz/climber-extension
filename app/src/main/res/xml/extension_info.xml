@@ -2,7 +2,24 @@
 <ExtensionInfo
     displayName="@string/extension_name"
     icon="@drawable/ic_launcher_foreground"
-    id="template-id"
+    id="climber"
     scansDevices="false">
-    <!-- DataType ... -->
+    <DataType
+        description="@string/climb_info_description"
+        displayName="@string/climb_info_display_name"
+        graphical="true"
+        icon="@drawable/ic_launcher_foreground"
+        typeId="climb-info" />
+    <DataType
+        description="@string/quad_data_1_description"
+        displayName="@string/quad_data_1_display_name"
+        graphical="true"
+        icon="@drawable/ic_launcher_foreground"
+        typeId="quad-data-1" />
+    <DataType
+        description="@string/quad_data_2_description"
+        displayName="@string/quad_data_2_display_name"
+        graphical="true"
+        icon="@drawable/ic_launcher_foreground"
+        typeId="quad-data-2" />
 </ExtensionInfo>

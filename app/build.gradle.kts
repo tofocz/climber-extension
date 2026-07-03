@@ -5,11 +5,11 @@ plugins {
 }
 
 android {
-    namespace = "io.hammerhead.karooexttemplate"
+    namespace = "io.hammerhead.climberextension"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "io.hammerhead.karooexttemplate"
+        applicationId = "io.hammerhead.climberextension"
         minSdk = 23
         targetSdk = 34
         versionCode = 1
@@ -40,4 +40,5 @@ dependencies {
     implementation(libs.bundles.androidx.lifeycle)
     implementation(libs.androidx.activity.compose)
     implementation(libs.bundles.compose.ui)
+    implementation(libs.kotlinx.coroutines.android)
 }
