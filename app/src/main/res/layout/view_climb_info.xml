@@ -12,33 +12,13 @@
         android:orientation="vertical">
 
         <TextView
-            android:id="@+id/label_distance_to_top"
+            android:id="@+id/label_cell_1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/label_distance_to_top" />
+            android:text="@string/placeholder_label" />
 
         <TextView
-            android:id="@+id/value_distance_to_top"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/placeholder_value" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:gravity="center"
-        android:orientation="vertical">
-
-        <TextView
-            android:id="@+id/label_avg_grade"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/label_avg_grade" />
-
-        <TextView
-            android:id="@+id/value_avg_grade"
+            android:id="@+id/value_cell_1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/placeholder_value" />
@@ -52,13 +32,33 @@
         android:orientation="vertical">
 
         <TextView
-            android:id="@+id/label_elev_to_top"
+            android:id="@+id/label_cell_2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/label_elev_to_top" />
+            android:text="@string/placeholder_label" />
 
         <TextView
-            android:id="@+id/value_elev_to_top"
+            android:id="@+id/value_cell_2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/placeholder_value" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/label_cell_3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/placeholder_label" />
+
+        <TextView
+            android:id="@+id/value_cell_3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/placeholder_value" />

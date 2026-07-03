@@ -42,30 +42,33 @@ When customizing this template for a real extension (per the README's own instru
 ## Build requirements
 - Gradle sync requires gpr.user and gpr.key in local.properties (GitHub PAT, read:packages scope)
 
-## Data fields (v1 spec — locked)
+## Data fields (v2 — revised, user-configurable)
 
-## Field 1 behavior — route dependency
-- Avg Climb Grade: sourced from OnNavigationState.NavigatingRoute.Climb.grade — requires an active navigated route with climb data. CONFIRMED route-only.
-- Distance to Top / Elev to Top: CONFIRMED populate via ambient climb detection, independent of a loaded route (device-tested, Karoo Climber setting on, no route loaded, climb detected — values populated).
-- Fallback "n/a" (single shared constant) applies ONLY to Avg Climb Grade when no route is active. Distance to Top / Elev to Top do not need this fallback when Karoo has detected a climb; they still need a sensible empty state for when no climb is detected at all (no route AND no climb in progress) — separate case, not yet specced.
-- Prerequisite: Climber setting must be enabled in Karoo settings.
+Architecture: single shared metric-picker component/config screen used by
+both fields. Do not implement separate picker logic per field.
 
-### Field 1 — "Climb Info" (full-width)
-- 3 data points, horizontal row: Distance to Top | Avg Climb Grade | Elev to Top
-- Source: Karoo SDK climb-state streams (verify SDK exposes these — open question)
+### Field 1 (full-width, 3 cells)
+- Layout fixed: 3 cells in a horizontal row
+- Content per cell: user-selected from shared metric list (see below)
+- No default/hardcoded assignment — user must configure on first use
+  (or ships with a sensible default selection, TBD)
 
-### Field 2 — "Quad Data" (half-width, 2x2 grid)
-- 4 user-configurable cells
-- Config screen: pick metric per cell from:
-  - Native streams: Power, HR, Cadence, Speed, Grade, Distance
-  - Calculated: W/kg, VAM, IF, NP, kJ
-- Two instances needed (placed side by side in drawer's bottom row)
+### Field 2 (half-width, 2x2 grid)
+- Layout fixed: 4 cells in a 2x2 grid
+- Content per cell: user-selected from same shared metric list
+- Two instances supported (side by side in drawer's bottom row)
 
-## Aesthetic requirements (non-negotiable)
-- Match native Karoo field style: font family, weight, sizing hierarchy, padding, label/value treatment
-- Reference: Barberfish. Do not reference KDoubleType.
-- Font color: white or very light grey (readable on blue climber drawer background). Never black.
+### Shared metric list (available to both fields' pickers)
+- Native streams: Power, HR, Cadence, Speed, Grade, Distance
+- Calculated: W/kg (native SDK POWER_TO_WEIGHT), VAM, IF, NP, kJ
+- Climb-specific (route-dependent, see Field 1 route-dependency notes below):
+  Distance to Top, Elev to Top, Avg Climb Grade
 
-## Open questions (verify early)
-- Does the SDK expose average climb grade for the current climb as a data stream?
-- Does the SDK expose rider weight from the user profile?
+## Route-dependency behavior (applies wherever these metrics are selected)
+- Avg Climb Grade: CONFIRMED route-only (OnNavigationState.NavigatingRoute.Climb.grade)
+- Distance to Top / Elev to Top: CONFIRMED populate via ambient climb detection,
+  independent of route, when Karoo Climber setting is on and a climb is detected
+- No-data fallback: "n/a" (single shared constant/function, referenced by all
+  cells regardless of which field they're in)
+- Unconfirmed edge case: no route AND no climb detected — assumed "n/a", not
+  device-verified

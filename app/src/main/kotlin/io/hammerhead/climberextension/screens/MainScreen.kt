@@ -18,7 +18,10 @@ import io.hammerhead.climberextension.R
 import io.hammerhead.climberextension.theme.AppTheme
 
 @Composable
-fun MainScreen(onConfigureQuadData: (Int) -> Unit = {}) {
+fun MainScreen(
+    onConfigureClimbInfo: () -> Unit = {},
+    onConfigureQuadData: (Int) -> Unit = {},
+) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -28,6 +31,9 @@ fun MainScreen(onConfigureQuadData: (Int) -> Unit = {}) {
         verticalArrangement = Arrangement.spacedBy(16.dp, Alignment.CenterVertically),
     ) {
         Text(text = stringResource(id = R.string.app_title), color = MaterialTheme.colorScheme.onBackground)
+        Button(onClick = onConfigureClimbInfo) {
+            Text(text = stringResource(id = R.string.configure_climb_info))
+        }
         Button(onClick = { onConfigureQuadData(1) }) {
             Text(text = stringResource(id = R.string.configure_quad_data_1))
         }

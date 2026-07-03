@@ -23,13 +23,23 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import io.hammerhead.climberextension.R
-import io.hammerhead.climberextension.extension.QuadDataConfigStore
-import io.hammerhead.climberextension.extension.QuadMetric
+import io.hammerhead.climberextension.extension.FieldMetricConfigStore
+import io.hammerhead.climberextension.extension.Metric
 
+/**
+ * Shared config screen for any field's metric picker (CLAUDE.md v2: single shared
+ * metric-picker component/config screen used by both Field 1 and Field 2, just with a
+ * different fixed cell count/layout per field).
+ */
 @Composable
-fun QuadDataConfigScreen(instanceIndex: Int, onBack: () -> Unit = {}) {
+fun MetricConfigScreen(
+    title: String,
+    fieldKey: String,
+    defaults: List<Metric>,
+    onBack: () -> Unit = {},
+) {
     val context = LocalContext.current
-    val store = remember(instanceIndex) { QuadDataConfigStore(context) }
+    val store = remember(fieldKey) { FieldMetricConfigStore(context) }
 
     Column(
         modifier = Modifier
@@ -38,16 +48,13 @@ fun QuadDataConfigScreen(instanceIndex: Int, onBack: () -> Unit = {}) {
             .padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp),
     ) {
-        Text(
-            text = stringResource(id = R.string.quad_data_config_title, instanceIndex),
-            color = MaterialTheme.colorScheme.onBackground,
-        )
+        Text(text = title, color = MaterialTheme.colorScheme.onBackground)
 
-        for (cellIndex in 0 until QuadDataConfigStore.CELLS_PER_INSTANCE) {
+        for (cellIndex in defaults.indices) {
             CellMetricSelector(
                 label = stringResource(id = R.string.cell_label, cellIndex + 1),
-                initialMetric = store.getMetric(instanceIndex, cellIndex),
-                onMetricSelected = { metric -> store.setMetric(instanceIndex, cellIndex, metric) },
+                initialMetric = store.getMetric(fieldKey, cellIndex, defaults[cellIndex]),
+                onMetricSelected = { metric -> store.setMetric(fieldKey, cellIndex, metric) },
             )
         }
 
@@ -60,8 +67,8 @@ fun QuadDataConfigScreen(instanceIndex: Int, onBack: () -> Unit = {}) {
 @Composable
 private fun CellMetricSelector(
     label: String,
-    initialMetric: QuadMetric,
-    onMetricSelected: (QuadMetric) -> Unit,
+    initialMetric: Metric,
+    onMetricSelected: (Metric) -> Unit,
 ) {
     var selected by remember { mutableStateOf(initialMetric) }
     var expanded by remember { mutableStateOf(false) }
@@ -74,7 +81,7 @@ private fun CellMetricSelector(
             Text(text = "$label: ${selected.label}")
         }
         DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
-            QuadMetric.entries.forEach { metric ->
+            Metric.entries.forEach { metric ->
                 DropdownMenuItem(
                     text = { Text(metric.label) },
                     onClick = {

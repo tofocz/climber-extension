@@ -6,23 +6,18 @@ import io.hammerhead.climberextension.R
 import io.hammerhead.karooext.KarooSystemService
 import io.hammerhead.karooext.extension.DataTypeImpl
 import io.hammerhead.karooext.internal.ViewEmitter
-import io.hammerhead.karooext.models.StreamState
 import io.hammerhead.karooext.models.ViewConfig
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.flowOf
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
-import kotlin.math.roundToInt
 
 /**
  * Field 2 - "Quad Data" (half-width, 2x2 grid of user-configurable cells).
  *
  * Two instances are registered ([instanceIndex] 1 and 2) so they sit side by side in the
  * drawer's bottom row, each reading its own per-cell metric selection from
- * [QuadDataConfigStore] (configured via the companion app's config screen).
+ * [FieldMetricConfigStore] (configured via the companion app's shared config screen).
  */
 class QuadDataType(
     private val karooSystem: KarooSystemService,
@@ -31,14 +26,15 @@ class QuadDataType(
 ) : DataTypeImpl(extension, typeIdFor(instanceIndex)) {
 
     override fun startView(context: Context, config: ViewConfig, emitter: ViewEmitter) {
-        val metrics = QuadDataConfigStore(context).getAllMetrics(instanceIndex)
+        val fieldKey = typeIdFor(instanceIndex)
+        val metrics = FieldMetricConfigStore(context).getAllMetrics(fieldKey, FieldDefaults.quadData(instanceIndex))
 
         val job = CoroutineScope(Dispatchers.IO).launch {
             combine(
-                flowFor(metrics[0]),
-                flowFor(metrics[1]),
-                flowFor(metrics[2]),
-                flowFor(metrics[3]),
+                karooSystem.metricValueFlow(metrics[0]),
+                karooSystem.metricValueFlow(metrics[1]),
+                karooSystem.metricValueFlow(metrics[2]),
+                karooSystem.metricValueFlow(metrics[3]),
             ) { value1, value2, value3, value4 ->
                 RemoteViews(context.packageName, R.layout.view_quad_data).apply {
                     setTextViewText(R.id.label_cell_1, metrics[0].label)
@@ -56,14 +52,6 @@ class QuadDataType(
         }
         emitter.setCancellable {
             job.cancel()
-        }
-    }
-
-    private fun flowFor(metric: QuadMetric): Flow<String> {
-        val nativeTypeId = metric.nativeTypeId ?: return flowOf(CalculatedMetrics.PLACEHOLDER)
-        return karooSystem.streamDataFlow(nativeTypeId).map { state ->
-            (state as? StreamState.Streaming)?.dataPoint?.singleValue?.roundToInt()?.toString()
-                ?: QuadDataFallback.NOT_STREAMING
         }
     }
 

@@ -5,10 +5,7 @@
 
     <!-- Field 1: Climb Info -->
     <string name="climb_info_display_name">Climb Info</string>
-    <string name="climb_info_description">Distance to Top, Avg Climb Grade, and Elev to Top</string>
-    <string name="label_distance_to_top">Dist to Top</string>
-    <string name="label_avg_grade">Avg Grade</string>
-    <string name="label_elev_to_top">Elev to Top</string>
+    <string name="climb_info_description">3 configurable data cells</string>
 
     <!-- Field 2: Quad Data -->
     <string name="quad_data_1_display_name">Quad Data 1</string>
@@ -21,9 +18,9 @@
     <string name="placeholder_label">Cell</string>
 
     <!-- Companion app config screen -->
+    <string name="configure_climb_info">Configure Climb Info</string>
     <string name="configure_quad_data_1">Configure Quad Data 1</string>
     <string name="configure_quad_data_2">Configure Quad Data 2</string>
-    <string name="quad_data_config_title">Quad Data %1$d</string>
     <string name="cell_label">Cell %1$d</string>
     <string name="action_back">Back</string>
 </resources>
